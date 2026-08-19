@@ -24,18 +24,30 @@ bool ToneMap::init(const ToneMapConfig &cfg)
 
     ommGetOperationMode(&m_lastMode);
 
-    if (m_cfg.enabled)
+    if (shouldApply())
         applyCurrent();
 
     LOG("tonemap: init done");
     return true;
 }
 
+const ToneMapProfile &ToneMap::activeProfile() const
+{
+    return (m_lastMode == AppletOperationMode_Console) ? m_cfg.docked : m_cfg.handheld;
+}
+
+bool ToneMap::shouldApply() const
+{
+    return m_cfg.enabled && activeProfile().enabled;
+}
+
 void ToneMap::applyCurrent()
 {
-    LOG("tonemap: applyCurrent curve=%d exposure=%.3f white_point=%.3f expand=%.3f contrast=%.3f",
-        static_cast<int>(m_cfg.curve), m_cfg.exposure, m_cfg.white_point, m_cfg.expand_strength, m_cfg.contrast);
-    hdr::Cmu cmu = hdr::buildTonemapCmu(m_cfg.curve, m_cfg.exposure, m_cfg.white_point, m_cfg.expand_strength, m_cfg.contrast);
+    const ToneMapProfile &profile = activeProfile();
+    LOG("tonemap: applyCurrent mode=%s curve=%d exposure=%.3f white_point=%.3f expand=%.3f contrast=%.3f",
+        (m_lastMode == AppletOperationMode_Console) ? "docked" : "handheld",
+        static_cast<int>(profile.curve), profile.exposure, profile.white_point, profile.expand_strength, profile.contrast);
+    hdr::Cmu cmu = hdr::buildTonemapCmu(profile.curve, profile.exposure, profile.white_point, profile.expand_strength, profile.contrast);
     LOG("tonemap: cmu built, applying");
     [[maybe_unused]] bool ok = m_disp.apply(cmu);
     LOG("tonemap: applyCurrent done ok=%d", ok);
@@ -68,7 +80,7 @@ void ToneMap::run()
         ommGetOperationMode(&m_lastMode);
 
         // Reapply every tick to prevent sleep mode issue
-        if (m_cfg.enabled)
+        if (shouldApply())
             applyCurrent();
         else
             disable();

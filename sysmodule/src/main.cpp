@@ -89,8 +89,10 @@ int main(int argc, char* argv[])
 
     ToneMapConfig cfg;
     configLoad(&cfg);
-    LOG("main: config loaded enabled=%d curve=%d exposure=%.3f white_point=%.3f expand=%.3f poll=%ums",
-        cfg.enabled, static_cast<int>(cfg.curve), cfg.exposure, cfg.white_point, cfg.expand_strength, cfg.poll_interval_ms);
+    LOG("main: config loaded global_enabled=%d poll=%ums handheld[enabled=%d curve=%d exposure=%.3f white_point=%.3f expand=%.3f contrast=%.3f] docked[enabled=%d curve=%d exposure=%.3f white_point=%.3f expand=%.3f contrast=%.3f]",
+        cfg.enabled, cfg.poll_interval_ms,
+        cfg.handheld.enabled, static_cast<int>(cfg.handheld.curve), cfg.handheld.exposure, cfg.handheld.white_point, cfg.handheld.expand_strength, cfg.handheld.contrast,
+        cfg.docked.enabled, static_cast<int>(cfg.docked.curve), cfg.docked.exposure, cfg.docked.white_point, cfg.docked.expand_strength, cfg.docked.contrast);
 
     static ToneMap toneMap;
     if (toneMap.init(cfg)) {

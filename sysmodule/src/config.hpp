@@ -4,7 +4,7 @@
 
 #include "tonemap_curve.hpp"
 
-struct ToneMapConfig
+struct ToneMapProfile
 {
     bool enabled;
     hdr::TonemapOperator curve;
@@ -12,7 +12,14 @@ struct ToneMapConfig
     float white_point;
     float expand_strength;
     float contrast;
+};
+
+struct ToneMapConfig
+{
+    bool enabled;
     u32 poll_interval_ms;
+    ToneMapProfile handheld;
+    ToneMapProfile docked;
 };
 
 void configLoad(ToneMapConfig *cfg);

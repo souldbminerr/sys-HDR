@@ -13,6 +13,8 @@ public:
 private:
     void applyCurrent();
     void disable();
+    const ToneMapProfile &activeProfile() const;
+    bool shouldApply() const;
 
     ToneMapConfig m_cfg{};
     hdr::DisplayController m_disp;

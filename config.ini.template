@@ -1,5 +1,8 @@
 [tonemap]
+; Enable/disable whole sysmodule. Overrides the profile-specific config
 enabled = true
+
+poll_interval_ms = 300
 
 ; tonemap operator
 ;   0 = off
@@ -7,14 +10,33 @@ enabled = true
 ;   2 = Reinhard Extended
 ;   3 = Hable
 ;   4 = ACES
-curve = 3
 
-exposure = 1.0
+; Handheld Optimal
+[tonemap_handheld]
+enabled = true
 
-white_point = 4.0
+curve = 4
 
-expand = 0.0
+exposure = 0.7
 
-contrast = 1.0
+white_point = 2.05
 
-poll_interval_ms = 300
+expand = 0.418
+
+contrast = 0.995
+
+
+
+; Docked optimal
+[tonemap_docked]
+enabled = true
+
+curve = 4
+
+exposure = 0.7
+
+white_point = 2.05
+
+expand = 0.418
+
+contrast = 0.995
