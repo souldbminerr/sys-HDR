@@ -30,7 +30,9 @@
 *.exe
 *.out
 *.app
-
+*.elf
+*.nacp
+*.nro
 /dist
 
 *.map

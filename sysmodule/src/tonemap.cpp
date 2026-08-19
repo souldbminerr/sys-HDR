@@ -1,5 +1,6 @@
 #include "tonemap.hpp"
 
+#include "boot_wait.hpp"
 #include "log.hpp"
 #include "omm.hpp"
 #include "tonemap_curve.hpp"
@@ -14,6 +15,12 @@ bool ToneMap::init(const ToneMapConfig &cfg)
         return false;
     }
     LOG("tonemap: display controller init ok");
+
+    if (m_cfg.enabled)
+    {
+        // Avoid race condition
+        WaitForQLaunch();
+    }
 
     ommGetOperationMode(&m_lastMode);
 
@@ -56,31 +63,14 @@ void ToneMap::run()
 
         ToneMapConfig fresh;
         configLoad(&fresh);
-        LOG("tonemap: poll enabled=%d curve=%d exposure=%.3f white_point=%.3f",
-            fresh.enabled, static_cast<int>(fresh.curve), fresh.exposure, fresh.white_point);
+        m_cfg = fresh;
 
-        AppletOperationMode mode = m_lastMode;
-        ommGetOperationMode(&mode);
-        const bool dockChanged = mode != m_lastMode;
-        m_lastMode = mode;
+        ommGetOperationMode(&m_lastMode);
 
-        const bool curveChanged = fresh.curve != m_cfg.curve ||
-            fresh.exposure != m_cfg.exposure || fresh.white_point != m_cfg.white_point ||
-            fresh.expand_strength != m_cfg.expand_strength;
-
-        if (fresh.enabled && (!m_cfg.enabled || curveChanged || dockChanged))
-        {
-            m_cfg = fresh;
+        // Reapply every tick to prevent sleep mode issue
+        if (m_cfg.enabled)
             applyCurrent();
-        }
-        else if (!fresh.enabled && m_cfg.enabled)
-        {
-            m_cfg = fresh;
-            disable();
-        }
         else
-        {
-            m_cfg = fresh;
-        }
+            disable();
     }
 }

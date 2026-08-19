@@ -61,11 +61,16 @@ void __appInit(void)
     if (R_FAILED(rc))
         diagAbortWithResult(rc);
 
+    rc = pmdmntInitialize();
+    if (R_FAILED(rc))
+        diagAbortWithResult(rc);
+
     smExit();
 }
 
 void __appExit(void)
 {
+    pmdmntExit();
     ommExit();
     nvExit();
     fsdevUnmountAll();

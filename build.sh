@@ -49,6 +49,15 @@ mkdir -p "$DIST_DIR/switch/.overlays"
 cp -vf "$ROOT_DIR/overlay/sys-hdr.ovl" "$DIST_DIR/switch/.overlays/sys-hdr.ovl"
 
 echo
+echo "*** Compiling sys-HDR calibration tool ***"
+pushd "$ROOT_DIR/calib"
+make -j$CORES
+popd > /dev/null
+
+mkdir -p "$DIST_DIR/switch"
+cp -vf "$ROOT_DIR/calib/sys-hdr-calib.nro" "$DIST_DIR/switch/sys-hdr-calib.nro"
+
+echo
 echo "*** Copying assets ***"
 mkdir -p "$DIST_DIR/config/sys-hdr"
 cp -vf "$ROOT_DIR/config.ini.template" "$DIST_DIR/config/sys-hdr/config.ini.template"
