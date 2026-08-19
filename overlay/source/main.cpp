@@ -17,6 +17,7 @@ constexpr const char* kSection = "tonemap";
 constexpr float kExposureMin = 0.25f, kExposureMax = 4.0f;
 constexpr float kWhitePointMin = 1.0f, kWhitePointMax = 16.0f;
 constexpr float kExpandMin = 0.0f, kExpandMax = 0.95f;
+constexpr float kContrastMin = 0.5f, kContrastMax = 2.0f;
 
 const std::vector<std::string> kCurveNames = {
     "Off", "Reinhard", "Reinhard Ext", "Hable", "ACES",
@@ -109,6 +110,8 @@ class GuiMain : public tsl::Gui {
             readFloat("white_point", 4.0f));
         addRangeTrackBar(list, "Expand", "expand", kExpandMin, kExpandMax,
             readFloat("expand", 0.0f));
+        addRangeTrackBar(list, "Contrast", "contrast", kContrastMin, kContrastMax,
+            readFloat("contrast", 1.0f));
 
         frame->setContent(list);
         return frame;

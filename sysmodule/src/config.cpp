@@ -29,5 +29,6 @@ void configLoad(ToneMapConfig *cfg)
     cfg->exposure        = static_cast<float>(ini_getf("tonemap", "exposure", 1.0, CONFIG_PATH));
     cfg->white_point     = static_cast<float>(ini_getf("tonemap", "white_point", 4.0, CONFIG_PATH));
     cfg->expand_strength = static_cast<float>(ini_getf("tonemap", "expand", 0.0, CONFIG_PATH));
+    cfg->contrast         = static_cast<float>(ini_getf("tonemap", "contrast", 1.0, CONFIG_PATH));
     cfg->poll_interval_ms = static_cast<u32>(ini_getl("tonemap", "poll_interval_ms", 300, CONFIG_PATH));
 }

@@ -13,6 +13,6 @@ enum class TonemapOperator
     Aces,
 };
 
-Cmu buildTonemapCmu(TonemapOperator op, float exposure, float whitePoint, float expandStrength = 0.0f);
+Cmu buildTonemapCmu(TonemapOperator op, float exposure, float whitePoint, float expandStrength = 0.0f, float contrast = 1.0f);
 
 } // namespace hdr

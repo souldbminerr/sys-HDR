@@ -11,6 +11,7 @@ struct ToneMapConfig
     float exposure;
     float white_point;
     float expand_strength;
+    float contrast;
     u32 poll_interval_ms;
 };
 

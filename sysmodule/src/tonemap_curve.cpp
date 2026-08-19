@@ -36,6 +36,14 @@ float hableCurve(float x)
     return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
 }
 
+float applyContrast(float y, float contrast)
+{
+    if (contrast == 1.0f)
+        return y;
+    constexpr float pivot = 0.5f;
+    return pivot + (y - pivot) * contrast;
+}
+
 float applyOperator(TonemapOperator op, float x, float whitePoint)
 {
     switch (op)
@@ -65,21 +73,22 @@ float applyOperator(TonemapOperator op, float x, float whitePoint)
 }
 
 void sampleToneCurve(u16 *out, std::size_t count, float lo, float hi,
-                      TonemapOperator op, float exposure, float whitePoint, float expandStrength)
+                      TonemapOperator op, float exposure, float whitePoint, float expandStrength, float contrast)
 {
     const float step = (hi - lo) / static_cast<float>(count - 1);
     float x = lo;
     for (std::size_t i = 0; i < count; i++, x += step)
     {
         const float expanded = expandHighlights(x, expandStrength);
-        const float linear = applyOperator(op, expanded * exposure, whitePoint);
+        float linear = applyOperator(op, expanded * exposure, whitePoint);
+        linear = applyContrast(linear, contrast);
         out[i] = static_cast<u16>(std::lround(srgbEncode(linear) * 0xFF));
     }
 }
 
 } // namespace
 
-Cmu buildTonemapCmu(TonemapOperator op, float exposure, float whitePoint, float expandStrength)
+Cmu buildTonemapCmu(TonemapOperator op, float exposure, float whitePoint, float expandStrength, float contrast)
 {
     Cmu cmu{};
 
@@ -97,8 +106,8 @@ Cmu buildTonemapCmu(TonemapOperator op, float exposure, float whitePoint, float 
             cmu.lut1[i] = static_cast<u16>(std::lround(std::clamp(srgbDecode(x), 0.0f, 1.0f) * 0x0FFF));
     }
 
-    sampleToneCurve(cmu.lut2.data(), 512, 0.0f, 0.125f, op, exposure, whitePoint, expandStrength);
-    sampleToneCurve(cmu.lut2.data() + 512, cmu.lut2.size() - 512, 0.125f, 1.0f, op, exposure, whitePoint, expandStrength);
+    sampleToneCurve(cmu.lut2.data(), 512, 0.0f, 0.125f, op, exposure, whitePoint, expandStrength, contrast);
+    sampleToneCurve(cmu.lut2.data() + 512, cmu.lut2.size() - 512, 0.125f, 1.0f, op, exposure, whitePoint, expandStrength, contrast);
 
     return cmu;
 }

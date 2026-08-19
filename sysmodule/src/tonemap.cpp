@@ -33,9 +33,9 @@ bool ToneMap::init(const ToneMapConfig &cfg)
 
 void ToneMap::applyCurrent()
 {
-    LOG("tonemap: applyCurrent curve=%d exposure=%.3f white_point=%.3f expand=%.3f",
-        static_cast<int>(m_cfg.curve), m_cfg.exposure, m_cfg.white_point, m_cfg.expand_strength);
-    hdr::Cmu cmu = hdr::buildTonemapCmu(m_cfg.curve, m_cfg.exposure, m_cfg.white_point, m_cfg.expand_strength);
+    LOG("tonemap: applyCurrent curve=%d exposure=%.3f white_point=%.3f expand=%.3f contrast=%.3f",
+        static_cast<int>(m_cfg.curve), m_cfg.exposure, m_cfg.white_point, m_cfg.expand_strength, m_cfg.contrast);
+    hdr::Cmu cmu = hdr::buildTonemapCmu(m_cfg.curve, m_cfg.exposure, m_cfg.white_point, m_cfg.expand_strength, m_cfg.contrast);
     LOG("tonemap: cmu built, applying");
     [[maybe_unused]] bool ok = m_disp.apply(cmu);
     LOG("tonemap: applyCurrent done ok=%d", ok);

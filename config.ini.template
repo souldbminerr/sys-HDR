@@ -15,4 +15,6 @@ white_point = 4.0
 
 expand = 0.0
 
+contrast = 1.0
+
 poll_interval_ms = 300
