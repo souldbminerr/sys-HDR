@@ -1,0 +1,18 @@
+[tonemap]
+enabled = true
+
+; tonemap operator
+;   0 = off
+;   1 = Reinhard
+;   2 = Reinhard Extended
+;   3 = Hable
+;   4 = ACES
+curve = 3
+
+exposure = 1.0
+
+white_point = 4.0
+
+expand = 0.0
+
+poll_interval_ms = 300
