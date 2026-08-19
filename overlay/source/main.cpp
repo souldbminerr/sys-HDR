@@ -64,16 +64,26 @@ void writeFloat(const char* key, float value) {
     writeValue(key, buf);
 }
 
+std::string formatFloat(float value) {
+    char buf[32];
+    std::snprintf(buf, sizeof(buf), "%.2f", value);
+    return buf;
+}
+
 void addRangeTrackBar(tsl::elm::List* list, const std::string& label, const char* key,
                        float lo, float hi, float initialValue) {
-    list->addItem(new tsl::elm::CategoryHeader(label));
+    auto* header = new tsl::elm::CategoryHeader(label);
+    header->setValue(formatFloat(initialValue));
+    list->addItem(header);
 
     const int initialProgress = static_cast<int>(std::lround((initialValue - lo) / (hi - lo) * 100.0f));
 
     auto* trackBar = new tsl::elm::TrackBar("");
     trackBar->setProgress(static_cast<u16>(std::clamp(initialProgress, 0, 100)));
-    trackBar->setValueChangedListener([key, lo, hi](u16 progress) {
-        writeFloat(key, lo + (hi - lo) * (progress / 100.0f));
+    trackBar->setValueChangedListener([key, lo, hi, header](u16 progress) {
+        const float value = lo + (hi - lo) * (progress / 100.0f);
+        writeFloat(key, value);
+        header->setValue(formatFloat(value));
     });
     list->addItem(trackBar);
 }
@@ -94,11 +104,11 @@ class GuiMain : public tsl::Gui {
         });
         list->addItem(enabledItem);
 
-        list->addItem(new tsl::elm::CategoryHeader("Curve"));
+        const int initialCurve = readCurve(3);
         auto* curveBar = new tsl::elm::NamedStepTrackBar("", {
             kCurveNames[0], kCurveNames[1], kCurveNames[2], kCurveNames[3], kCurveNames[4],
         });
-        curveBar->setProgress(static_cast<u16>(readCurve(3)));
+        curveBar->setProgress(static_cast<u16>(initialCurve));
         curveBar->setValueChangedListener([](u16 index) {
             writeValue("curve", std::to_string(index));
         });
