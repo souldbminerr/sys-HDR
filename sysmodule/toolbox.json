@@ -1,5 +1,5 @@
 {
 	"name"  : "sys-HDR",
 	"tid"   : "0x00FF0000743C6FFF",
-	"requires_reboot": true
+	"requires_reboot": false
 }

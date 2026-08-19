@@ -5,7 +5,7 @@
 #include "omm.hpp"
 #include "tonemap.hpp"
 
-#define INNER_HEAP_SIZE 0x180000
+#define INNER_HEAP_SIZE 0x20000
 
 #ifdef __cplusplus
 extern "C" {
