@@ -1,3 +1,3 @@
-# sys-HDR
+# sys-ColorCurve
 
-HDR tonemapper for Horizon OS using Tegra X1 CSC
+Fake HDR for Horizon OS using Tegra X1 CSC
